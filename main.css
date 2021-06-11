@@ -1,0 +1,11 @@
+button {
+  color: grey;
+  font: menu;
+  font-size: 20px;
+  border-color: lightgray;
+}
+
+p {
+  font: menu;
+  font-size: 25px;
+}
