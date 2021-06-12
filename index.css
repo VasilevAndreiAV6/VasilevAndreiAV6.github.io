@@ -1,11 +1,22 @@
 button {
   color: grey;
   font: menu;
-  font-size: 20px;
+  font-size: 18px;
   border-color: lightgray;
 }
 
 p {
   font: menu;
-  font-size: 25px;
+  font-size: 20px;
 }
+
+label {
+  font: menu;
+  font-size: 20px;
+}
+
+input {
+  font: menu;
+  font-size: 20px;
+}
+
