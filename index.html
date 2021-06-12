@@ -2,16 +2,35 @@
 <html>
 
 <head>
+  <meta charset="utf-8">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="index.css">
   <title>Main page</title>
-  <p>Vasilev Andrei summer practice</p>
+  <img id="avatar">
+  <header>
+
+    <label for="avatar">VASILEV ANDREI SUMMER PRACTICE</label>
+  </header>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/core.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
+  <script>
+    function setAvatarURL() {
+      let ava = document.getElementById("avatar");
+      ava.src = "https://www.gravatar.com/avatar/" + CryptoJS.MD5("vasilev6026@gmail.com").toString();
+    }
+  </script>
 </head>
 
-<body>
+<body onload="setAvatarURL()">
   <ul>
     <li><button onclick="window.location.href='./Mandl/mandl.html';">Mandelbrot</button></li>
+    <li><button onclick="window.location.href='./Calendar/calendar.html';">Calendar</button></li>
   </ul>
 </body>
+
+<footer>
+  <img id="cgsg" src="https://cgsg.pml30.ru/!inc/images/cgsg100.png">
+</footer>
 
 </html>

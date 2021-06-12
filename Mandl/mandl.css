@@ -1,0 +1,23 @@
+canvas {
+  border-style: solid;
+  border-radius: 5px;
+  border-color: #dcdcdc;
+}
+
+label {
+  font-size: 18px;
+  font-family: Arial, Helvetica, monospace;
+  background-color: #dcdcdc;
+  padding: 12px 12px;
+  position: relative;
+  text-align: left;
+  top: 21px;
+  border-style: solid;
+  border-radius: 5px;
+  border-color: #dcdcdc;
+}
+
+input {
+  font-size: 18px;
+  font-family: Arial, Helvetica, monospace;
+}

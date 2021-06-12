@@ -1,10 +1,11 @@
 <html>
 
 <head>
-  <title>Checkers</title>
+  <title>Mandelbrot</title>
+  <meta charset="utf-8">
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="../index.css">
-  
+  <link rel="stylesheet" href="mandl.css">
+
   <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
 
   <script id="shader-fs" type="x-shader/x-fragment">
@@ -33,7 +34,7 @@
     {
         vec2 num;
         vec2 num1;
-        vec2 num0 = vec2((gl_FragCoord.x - mouseX)  / Zoom, (gl_FragCoord.y + mouseY) / Zoom);
+        vec2 num0 = -1.0 + 2.0 * vec2((gl_FragCoord.x - mouseX)  / Zoom, (gl_FragCoord.y + mouseY) / Zoom);
         int n;
 
         num = num0;
@@ -72,17 +73,20 @@
     let Zoom = 300;
     let xAll = 500;
     let yAll = -200;
-  
+    //let w = document.getElementById("wegl-canvas").width;
+    //let h = document.getElementById("wegl-canvas").height;
+
 
     /***
      * Mouse handle functions
      ***/
 
     function MouseMove(e) {
+      /*
       document.getElementById("1").innerHTML = "x: " + x + ", y: " + y;
       document.getElementById("2").innerHTML = "Is clicked: " + (moving === 1 ? "yes" : "no");
       document.getElementById("3").innerHTML = "Clicked in x: " + xOld + ", y: " + yOld;
-           
+      */
       x = e.clientX;
       y = e.clientY;
     }
@@ -96,10 +100,16 @@
     function MouseWheel(e) {
       if (e.wheelDelta > 0) {
         Zoom *= e.wheelDelta / 100;
+        xAll *= e.wheelDelta / 100;
+        yAll *= e.wheelDelta / 100;
       }
       else {
         Zoom /= -e.wheelDelta / 100;
+        xAll /= -e.wheelDelta / 100;
+        yAll /= -e.wheelDelta / 100;
       }
+      gl.uniform1f(shaderProgram.mouseX_uniform, xAll); //+ x - xOld);
+      gl.uniform1f(shaderProgram.mouseY_uniform, yAll); //+ y - yOld);
     }
 
     function MouseUp(e) {
@@ -107,7 +117,7 @@
       xAll += x - xOld;
       yAll += y - yOld;
     }
-    
+
     let mvMatrix = mat4.create();
     let pMatrix = mat4.create();
 
@@ -122,7 +132,7 @@
         gl.uniform1f(shaderProgram.mouseY_uniform, yAll + y - yOld);
       }
     }
-    
+
     var gl;
     var checkers_itaretions;
     function initGL(canvas) {
@@ -174,7 +184,7 @@
     }
 
     var shaderProgram;
-    
+
     /* Shaders initialization function */
     function initShaders() {
       var fragmentShader = getShader(gl, "shader-fs");
@@ -203,7 +213,7 @@
     }
 
     var squareVertexPositionBuffer;
-    
+
     /* Buffers initialization function */
     function initBuffers() {
       squareVertexPositionBuffer = gl.createBuffer();
@@ -240,7 +250,7 @@
       window.requestAnimationFrame(tick);
       drawScene();
     }
-    
+
     /* WEbGL start function */
     function webGLStart() {
       // default cell width
@@ -285,16 +295,16 @@
 
 <body onload="webGLStart();">
   <canvas id="wegl-canvas" style="border: none;" width="600" height="600" onmousemove="MouseMove(event)"
-    onmousedown="MouseDown(event)" onmouseup="MouseUp(event)" onmousewheel="MouseWheel(event)" onmouseout="enableScroll()" onmouseover="disableScroll();"></canvas>
+    onmousedown="MouseDown(event)" onmouseup="MouseUp(event)" onmousewheel="MouseWheel(event)"
+    onmouseout="enableScroll()" onmouseover="disableScroll();"></canvas>
 
-  <br />
+  <br>
+  <label for="input_checkers_itaretions">Num of iterations <input type="text" id="input_checkers_itaretions"
+      onkeyup="update_checkers_itaretions()"></label>
 
-  <label for="input_checkers_itaretions">Num of iterations</label> <input type="text" id="input_checkers_itaretions"
-    onkeyup="update_checkers_itaretions()"><br>
-
-  <p id="1">Mouse coordinates</p>
+  <!-- <p id="1">Mouse coordinates</p>
   <p id="2"></p>
-  <p id="3"></p>
+  <p id="3"></p> -->
 </body>
 
 </html>

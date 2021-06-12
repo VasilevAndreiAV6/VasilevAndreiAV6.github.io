@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="calendar.css">
+  <title>Calendar</title>
+</head>
+
+<body onload="calendarInit()">
+  <script type="text/javascript">
+    let date = new Date();
+
+    function calendarInit() {
+      calendarSet(date);
+    }
+
+    function calendarPrev() {
+      /*
+      if (date.getMonth() > 0)
+        date = new Date(date.getFullYear(), date.getMonth() - 1, date.getDay());
+      else
+        date = new Date(date.getFullYear() - 1, 11, date.getDay());
+        */
+      date.setMonth(date.getMonth() - 1);
+      calendarSet(date);
+    }
+
+    function calendarNext() {
+      /*
+      if (date.getMonth() < 11)
+        date = new Date(date.getFullYear(), date.getMonth() + 1, date.getDay());
+      else
+        date = new Date(date.getFullYear() + 1, 0, date.getDay());*/
+      date.setMonth(date.getMonth() + 1);
+      calendarSet(date);
+    }
+
+    function calendarSet(now) {
+      let first = new Date(now.getFullYear(), now.getMonth(), 1);
+      let month_name = now.toLocaleString('ru-ru', { month: 'long' });
+      let table = '<table><tr> <td id="prev" onmouseup="calendarPrev()">&#10094;</td> <td id="month" colspan="5">' + month_name[0].toUpperCase() + month_name.substring(1) + ' ' + first.getFullYear() + '</td> <td id="next" onmouseup="calendarNext()">&#10095;</td> </tr>'
+
+      table += '<tr><td id="weekday">Ïí</td><td id="weekday">Âò</td><td id="weekday">Ñð</td><td id="weekday">×ò</td><td id="weekday">Ïò</td><td id="weekday">Ñá</td><td id="weekday">Âñ</td></tr>'
+
+      /* Previous month * /
+      table += '<tr>';
+      for (let i = getWeekDay(first) - 2; i >= 0; i--)
+        table += '<td id="otherdays">' + (32 - i - new Date(first.getFullYear(), first.getMonth(), 32).getDate()) + '</td>';
+      /**/
+
+      for (let i = getWeekDay(first) - 2; i >= 0; i--)
+        table += '<td id="otherdays"></td>';
+
+      /* Current month */
+      for (let i = 0; i < 6; i++) {
+        let day_in_month = 32 - new Date(first.getFullYear(), first.getMonth(), 32).getDate();
+        if (i != 0) {
+          table += '<tr>';
+          for (let j = 0; j < 7; j++) {
+            if ((i * 7 + j - getWeekDay(first) + 2) > day_in_month)
+              break;
+            if (j != 6 && j != 5)
+              table += '<td id="days">' + (i * 7 + j - getWeekDay(first) + 2) + '</td>';
+            else
+              table += '<td id="weekend">' + (i * 7 + j - getWeekDay(first) + 2) + '</td>';
+          }
+          table += '</tr>';
+        }
+        else {
+          for (let j = getWeekDay(first) - 1; j < 7; j++) {
+            if ((i * 7 + j - getWeekDay(first) + 2) > day_in_month)
+              break;
+            if (j != 6 && j != 5)
+              table += '<td id="days">' + (i * 7 + j - getWeekDay(first) + 2) + '</td>';
+            else
+              table += '<td id="weekend">' + (i * 7 + j - getWeekDay(first) + 2) + '</td>';
+          }
+          table += '</tr>';
+        }
+      }
+
+
+      /* Next month * /
+      table = table.slice(0, -10);
+      first_in_next_month = new Date(first.getFullYear(), first.getMonth() + 1, 1);
+      for (let i = getWeekDay(first_in_next_month) - 1; i < 7; i++) {
+        if (i != 6 && i != 5)
+          table += '<td id="otherdays">' + (i - getWeekDay(first_in_next_month) + 2) + '</td>';
+        else
+          table += '<td id="otherweekend">' + (i - getWeekDay(first_in_next_month) + 2) + '</td>';
+      }
+
+      /* Table end */
+      table += "</table>";
+      document.getElementById("calendar").innerHTML = table;
+    }
+
+    function getWeekDay(day) {
+      if (day.getDay() === 0)
+        return 7;
+      return day.getDay();
+    }
+
+  </script>
+
+  <div id="calendar"></div>
+
+</body>
+
+</html>

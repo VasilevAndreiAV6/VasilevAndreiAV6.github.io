@@ -1,22 +1,62 @@
 button {
-  color: grey;
-  font: menu;
-  font-size: 18px;
-  border-color: lightgray;
+  width: 150px;
+  font-family: Arial, Helvetica, monospace;
+  background-color: #dadada;
+  border-width: 2px;
+  border-color: #c7c7c7;
+  color: rgb(0, 0, 0);
+  padding: 12px 28px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-style: solid;
+  border-radius: 5px;
 }
 
 p {
-  font: menu;
-  font-size: 20px;
-}
-
-label {
-  font: menu;
-  font-size: 20px;
+  font-size: 18px;
+  font-family: Arial, Helvetica, monospace;
 }
 
 input {
-  font: menu;
-  font-size: 20px;
+  font-size: 18px;
+  font-family: Arial, Helvetica, monospace;
 }
 
+header {
+  font-size: x-large;
+  background-color: #dadada;
+  border-width: 2px;
+  border-color: #c7c7c7;
+  color: Black;
+  padding: 15px 20px;
+  text-align: ;
+  text-decoration: none;
+  display: inline-block;
+  font-family: Arial, Helvetica, monospace;
+  border-style: solid;
+  border: 0px;
+  border-radius: 5px;
+}
+
+img {
+  height: 58px;
+  border: 58px;
+  position: relative;
+  top: 21px;
+  border-style: solid;
+  border: 0px;
+  border-radius: 5px;
+}
+
+ul {
+  list-style: square outside;
+  color: #c7c7c7;
+ }
+
+#cgsg {
+  position: relative;
+  bottom: 0px;
+}
