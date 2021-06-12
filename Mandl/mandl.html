@@ -2,7 +2,9 @@
 
 <head>
   <title>Checkers</title>
-
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../index.css">
+  
   <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
 
   <script id="shader-fs" type="x-shader/x-fragment">
@@ -62,6 +64,65 @@
 </script>
 
   <script type="text/javascript">
+    let moving = 0;
+    let x = 0;
+    let y = 0;
+    let xOld = 0;
+    let yOld = 0;
+    let Zoom = 300;
+    let xAll = 500;
+    let yAll = -200;
+  
+
+    /***
+     * Mouse handle functions
+     ***/
+
+    function MouseMove(e) {
+      document.getElementById("1").innerHTML = "x: " + x + ", y: " + y;
+      document.getElementById("2").innerHTML = "Is clicked: " + (moving === 1 ? "yes" : "no");
+      document.getElementById("3").innerHTML = "Clicked in x: " + xOld + ", y: " + yOld;
+           
+      x = e.clientX;
+      y = e.clientY;
+    }
+
+    function MouseDown(e) {
+      moving = 1;
+      xOld = x;
+      yOld = y;
+    }
+
+    function MouseWheel(e) {
+      if (e.wheelDelta > 0) {
+        Zoom *= e.wheelDelta / 100;
+      }
+      else {
+        Zoom /= -e.wheelDelta / 100;
+      }
+    }
+
+    function MouseUp(e) {
+      moving = 0;
+      xAll += x - xOld;
+      yAll += y - yOld;
+    }
+    
+    let mvMatrix = mat4.create();
+    let pMatrix = mat4.create();
+
+    /* Set uniforms to shader function */
+    function setMatrixUniforms() {
+      gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+      gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+      gl.uniform1f(shaderProgram.itaretions_uniform, checkers_itaretions);
+      gl.uniform1f(shaderProgram.Zoom_uniform, Zoom);
+      if (moving) {
+        gl.uniform1f(shaderProgram.mouseX_uniform, xAll + x - xOld);
+        gl.uniform1f(shaderProgram.mouseY_uniform, yAll + y - yOld);
+      }
+    }
+    
     var gl;
     var checkers_itaretions;
     function initGL(canvas) {
@@ -76,7 +137,7 @@
       }
     }
 
-
+    /* Get shader by id function */
     function getShader(gl, id) {
       var shaderScript = document.getElementById(id);
       if (!shaderScript) {
@@ -113,7 +174,8 @@
     }
 
     var shaderProgram;
-
+    
+    /* Shaders initialization function */
     function initShaders() {
       var fragmentShader = getShader(gl, "shader-fs");
       var vertexShader = getShader(gl, "shader-vs");
@@ -140,58 +202,9 @@
       shaderProgram.Zoom_uniform = gl.getUniformLocation(shaderProgram, "Zoom");
     }
 
-
-    let mvMatrix = mat4.create();
-    let pMatrix = mat4.create();
-    let moving = 0;
-    let x = 0;
-    let y = 0;
-    let xOld = 0;
-    let yOld = 0;
-    let Zoom = 300;
-    let xAll = 500;
-    let yAll = -200;
-
-    function myFunction(e) {
-      document.getElementById("demo").innerHTML = x + "," + y;
-
-      x = e.clientX;
-      y = e.clientY;
-    }
-    function MouseDown(e) {
-      moving = 1;
-      xOld = x;
-      yOld = y;
-    }
-
-    function MouseWheel(e) {
-      if (e.wheelDelta > 0) {
-        Zoom *= e.wheelDelta / 100;
-      }
-      else {
-        Zoom /= -e.wheelDelta / 100;
-      }
-    }
-
-    function MouseUp(e) {
-      moving = 0;
-      xAll += x - xOld;
-      yAll += y - yOld;
-    }
-
-    function setMatrixUniforms() {
-      gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-      gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
-      gl.uniform1f(shaderProgram.itaretions_uniform, checkers_itaretions);
-      gl.uniform1f(shaderProgram.Zoom_uniform, Zoom);
-      if (moving) {
-        gl.uniform1f(shaderProgram.mouseX_uniform, xAll + x - xOld);
-        gl.uniform1f(shaderProgram.mouseY_uniform, yAll + y - yOld);
-      }
-    }
-
     var squareVertexPositionBuffer;
-
+    
+    /* Buffers initialization function */
     function initBuffers() {
       squareVertexPositionBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
@@ -206,7 +219,7 @@
       squareVertexPositionBuffer.numItems = 4;
     }
 
-
+    /* Draw scene function */
     function drawScene() {
       gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -222,12 +235,13 @@
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
     }
 
+    /* Tick function */
     function tick() {
       window.requestAnimationFrame(tick);
       drawScene();
     }
-
-
+    
+    /* WEbGL start function */
     function webGLStart() {
       // default cell width
       checkers_itaretions = 256;
@@ -255,6 +269,7 @@
       tick();
     }
 
+    /* Update iterations input function */
     function update_checkers_itaretions() {
       data = document.getElementById('input_checkers_itaretions').value;
       checkers_itaretions = parseInt(data);
@@ -269,15 +284,17 @@
 
 
 <body onload="webGLStart();">
-  <canvas id="wegl-canvas" style="border: none;" width="600" height="600" onmousemove="myFunction(event)"
-    onmousedown="MouseDown(event)" onmouseup="MouseUp(event)" onmousewheel="MouseWheel(event)"></canvas>
+  <canvas id="wegl-canvas" style="border: none;" width="600" height="600" onmousemove="MouseMove(event)"
+    onmousedown="MouseDown(event)" onmouseup="MouseUp(event)" onmousewheel="MouseWheel(event)" onmouseout="enableScroll()" onmouseover="disableScroll();"></canvas>
 
   <br />
 
-  <label for="input_checkers_itaretions"> Num of iterations</label> <input type="text" id="input_checkers_itaretions"
+  <label for="input_checkers_itaretions">Num of iterations</label> <input type="text" id="input_checkers_itaretions"
     onkeyup="update_checkers_itaretions()"><br>
 
-  <p id="demo"></p>
+  <p id="1">Mouse coordinates</p>
+  <p id="2"></p>
+  <p id="3"></p>
 </body>
 
 </html>
