@@ -42,7 +42,10 @@
       let month_name = now.toLocaleString('ru-ru', { month: 'long' });
       let table = '<table><tr> <td id="prev" onmouseup="calendarPrev()">&#10094;</td> <td id="month" colspan="5">' + month_name[0].toUpperCase() + month_name.substring(1) + ' ' + first.getFullYear() + '</td> <td id="next" onmouseup="calendarNext()">&#10095;</td> </tr>'
 
-      table += '<tr><td id="weekday">Ïí</td><td id="weekday">Âò</td><td id="weekday">Ñð</td><td id="weekday">×ò</td><td id="weekday">Ïò</td><td id="weekday">Ñá</td><td id="weekday">Âñ</td></tr>'
+      table += '<tr>';
+      for (let i = 0; i < 7; i++)
+        table += '<td id="weekday">' + (new Date(2021, 5, 7 + i)).toLocaleString('ru-ru', { weekday: 'short' })[0].toUpperCase() + (new Date(2021, 5, 7 + i)).toLocaleString('ru-ru', { weekday: 'short' }).substring(1) + '</td>';
+      table += '</tr>';
 
       /* Previous month * /
       table += '<tr>';
