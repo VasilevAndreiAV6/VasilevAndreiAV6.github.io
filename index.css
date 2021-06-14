@@ -1,5 +1,5 @@
 button {
-  width: 150px;
+  width: 180px;
   font-family: Arial, Helvetica, monospace;
   background-color: #dadada;
   border-width: 2px;
@@ -32,7 +32,6 @@ header {
   border-color: #c7c7c7;
   color: Black;
   padding: 15px 20px;
-  text-align: ;
   text-decoration: none;
   display: inline-block;
   font-family: Arial, Helvetica, monospace;
@@ -59,4 +58,8 @@ ul {
 #cgsg {
   position: relative;
   bottom: 0px;
+}
+
+#gitico {
+  cursor: pointer;
 }
