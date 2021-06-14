@@ -78,3 +78,19 @@ td, tr {
   border-radius: 5px;
 
 }
+button {
+  width: 120px;
+  font-family: Arial, Helvetica, monospace;
+  background-color: #dadada;
+  border-width: 2px;
+  border-color: #c7c7c7;
+  color: rgb(0, 0, 0);
+  padding: 12px 28px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-style: solid;
+  border-radius: 5px;
+}

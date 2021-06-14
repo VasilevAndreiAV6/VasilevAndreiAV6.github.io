@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../../index.css">
+  <title>Quiz0</title>
+  <img id="avatar">
+  <header>
+
+    <label for="avatar">VASILEV ANDREI SUMMER PRACTICE</label>
+  </header>
+  <br>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/core.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
+  <script>
+    function setAvatarURL() {
+      let ava = document.getElementById("avatar");
+      ava.src = "https://www.gravatar.com/avatar/" + CryptoJS.MD5("vasilev6026@gmail.com").toString();
+    }
+
+    async function getFileText(path) {
+      let result = await fetch(path);
+      return await result.text();
+    }
+
+    function printXY(input) {
+      let strings = input.split("\r\n");
+      let n = parseInt(Number(strings[0].split(' ')[0]));
+      let k = parseInt(Number(strings[0].split(' ')[1]));
+
+      let dict = {};
+
+      for (let i = 1; i <= n; i++)
+        dict[strings[i]] = 0;
+      for (let i = 1; i <= n; i++)
+        dict[strings[i]]++;
+
+      for (let i = 1; i <= n; i++)
+        if (dict[strings[i]] != 3)
+          document.getElementById("abc").innerHTML += strings[i] + ' ';
+    }
+
+    async function onLoad() {
+      setAvatarURL();
+      text = await getFileText("input.txt");
+      printXY(text);
+    }
+
+  </script>
+</head>
+
+<body onload="onLoad()">
+  <ul>
+    <li><button onclick="window.location.href='../quiz.html'">&#10094; BACK</button></li>
+  </ul>
+  <p id="abc">X, Y: </p>
+</body>
+
+<footer>
+  <img id="cgsg" src="https://cgsg.pml30.ru/!inc/images/cgsg100.png">
+</footer>
+
+</html>
