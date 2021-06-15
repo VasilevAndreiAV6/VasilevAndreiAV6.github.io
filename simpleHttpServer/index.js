@@ -5,17 +5,16 @@ const fs = require('fs').promises;
 let messages = [];
 
 const requestListener = function (req, res) {
-  console.log(
-    `Request: ${req.method}, ${req.url}.`
-  );
-
   if (req.url === "/") {
-    console.log(`${__dirname}/chatserver.css`);
     fs.readFile(`${__dirname}/chatserver.html`)
       .then((html_content) => {
         res.setHeader("Content-Type", "text/html");
         res.writeHead(200);
         res.end(html_content);
+        console.log(
+          `Request: ${req.method}, ${req.url}.`
+        );
+
       });
   } else if (req.url.endsWith(".css")) {
     fs.readFile(`${__dirname}/chatserver.css`)
@@ -23,6 +22,10 @@ const requestListener = function (req, res) {
         res.setHeader("Content-Type", "text/css");
         res.writeHead(200);
         res.end(css_content);
+        console.log(
+          `Request: ${req.method}, ${req.url}.`
+        );
+
       });
   } else if (req.url === "/msg" && req.method === "POST") {
     let data = "";
@@ -36,18 +39,12 @@ const requestListener = function (req, res) {
       res.end();
     })
   } else if (req.url === "/msg" && req.method === "GET") {
-    let messages_pane_text = "";
-
-    for (message of messages) {
-      messages_pane_text += `${message.name}: ${message.message}<br>`;
-    }
-
     res.setHeader("Content-Type", "text");
     res.writeHead(200);
-    res.end(messages_pane_text);
+    res.end(JSON.stringify(messages));
   } else {
-    res.writeHead(500);
-    res.end("Error, unsupported");
+    res.writeHead(404);
+    res.end("Not found");
     return;
   }
 };
