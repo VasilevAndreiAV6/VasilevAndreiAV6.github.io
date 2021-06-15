@@ -1,56 +1,58 @@
-
-const http = require('http');
-const { parse } = require('querystring');
+const http = require("http");
 const fs = require('fs').promises;
 
-let messanges = "";
+// requests handle
+let messages = [];
 
-const server = http.createServer((req, res) => {
-  if (req.method === 'POST') {
-    collectRequestData(req, result => {
-      console.log(result);
-      messanges += result.mes;
-      fs.readFile(__dirname + "/index.html")
-        .then(contents => {
-          res.setHeader("Content-Type", "text/html");
-          res.writeHead(200);
-          res.end(contents);
-        })
-        .catch(err => {
-          res.writeHead(500);
-          res.end(err);
-          return;
-        });
-    });
-  }
-  else {
-    fs.readFile(__dirname + "/index.html")
-      .then(contents => {
+const requestListener = function (req, res) {
+  console.log(
+    `Request: ${req.method}, ${req.url}.`
+  );
+
+  if (req.url === "/") {
+    console.log(`${__dirname}/chatserver.css`);
+    fs.readFile(`${__dirname}/chatserver.html`)
+      .then((html_content) => {
         res.setHeader("Content-Type", "text/html");
         res.writeHead(200);
-        res.end(contents);
-      })
-      .catch(err => {
-        res.writeHead(500);
-        res.end(err);
-        return;
+        res.end(html_content);
       });
-  }
-});
-server.listen(8000);
+  } else if (req.url.endsWith(".css")) {
+    fs.readFile(`${__dirname}/chatserver.css`)
+      .then((css_content) => {
+        res.setHeader("Content-Type", "text/css");
+        res.writeHead(200);
+        res.end(css_content);
+      });
+  } else if (req.url === "/msg" && req.method === "POST") {
+    let data = "";
+    req.once('data', chunk => {
+      data += chunk;
+    })
+    req.once('end', () => {
+      let new_msg = JSON.parse(data);
+      messages.push(new_msg);
+      console.log(`New msg added - { name: "${new_msg.name}", message: "${new_msg.message}" }.`);
+      res.end();
+    })
+  } else if (req.url === "/msg" && req.method === "GET") {
+    let messages_pane_text = "";
 
-function collectRequestData(request, callback) {
-  const FORM_URLENCODED = 'application/x-www-form-urlencoded';
-  if (request.headers['content-type'] === FORM_URLENCODED) {
-    let body = '';
-    request.on('data', chunk => {
-      body += chunk.toString();
-    });
-    request.on('end', () => {
-      callback(parse(body));
-    });
+    for (message of messages) {
+      messages_pane_text += `${message.name}: ${message.message}<br>`;
+    }
+
+    res.setHeader("Content-Type", "text");
+    res.writeHead(200);
+    res.end(messages_pane_text);
+  } else {
+    res.writeHead(500);
+    res.end("Error, unsupported");
+    return;
   }
-  else {
-    callback(null);
-  }
-}
+};
+
+// creating server
+const port = 8000;
+const server = http.createServer(requestListener);
+server.listen(port);
