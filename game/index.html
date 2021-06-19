@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body onload="onLoad()">
+  <button onclick="save()">Save</button>
+  <button onclick="load()">Load</button><br><br>
+  <div>Circuit creation...</div>
+  <label for="collect_btn" id="gm">[..........]</label>
+  <button id="collect_btn" onclick="collect()">Collect</button><br><br>
+  <div id="crct_num"></div>
+  <script>
+    let game_progress;
+
+    onLoad();
+    circuitProgress();
+    document.getElementById("crct_num").innerHTML = 'You have ' + game_progress.num_of_circuits + ' circuits';
+
+    async function circuitProgress() {
+      document.getElementById("collect_btn").disabled = true;
+      document.getElementById("gm").innerHTML = "[..........]";
+      await wait(100 / game_progress.circuits_per_sec); /* 1 */
+      document.getElementById("gm").innerHTML = "[#.........]";
+      await wait(100 / game_progress.circuits_per_sec); /* 2 */
+      document.getElementById("gm").innerHTML = "[##........]";
+      await wait(100 / game_progress.circuits_per_sec); /* 3 */
+      document.getElementById("gm").innerHTML = "[###.......]";
+      await wait(100 / game_progress.circuits_per_sec); /* 4 */
+      document.getElementById("gm").innerHTML = "[####......]";
+      await wait(100 / game_progress.circuits_per_sec); /* 5 */
+      document.getElementById("gm").innerHTML = "[#####.....]";
+      await wait(100 / game_progress.circuits_per_sec); /* 6 */
+      document.getElementById("gm").innerHTML = "[######....]";
+      await wait(100 / game_progress.circuits_per_sec); /* 7 */
+      document.getElementById("gm").innerHTML = "[#######...]";
+      await wait(100 / game_progress.circuits_per_sec); /* 8 */
+      document.getElementById("gm").innerHTML = "[########..]";
+      await wait(100 / game_progress.circuits_per_sec); /* 9 */
+      document.getElementById("gm").innerHTML = "[#########.]";
+      await wait(100 / game_progress.circuits_per_sec); /* 10 */
+      document.getElementById("gm").innerHTML = "[##########]";
+      document.getElementById("collect_btn").disabled = false;
+    }
+
+    function collect() {
+      game_progress.num_of_circuits++;
+      document.getElementById("crct_num").innerHTML = 'You have ' + game_progress.num_of_circuits + ' circuits';
+      setCookie();
+      circuitProgress();
+    }
+
+    function wait(time) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve();
+        }, time);
+      });
+    }
+
+    function flex(flexinus) {
+      flexinus++;
+      flexinus--;
+    }
+
+    //
+    // Cookie handle functions.
+    //
+    function onLoad() {
+      let game_progress_from_cookie = JSON.parse(getCookie('gameProgress'));
+      if (game_progress_from_cookie)
+        game_progress = Object.assign({}, game_progress_from_cookie);
+      else
+        game_progress = {
+          num_of_circuits: 0,
+          circuits_per_sec: 0.1
+        };
+    }
+
+    function getCookie(name) {
+      let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    function setCookie() {
+      document.cookie = `gameProgress=${JSON.stringify(game_progress)}`;
+    }
+
+    //
+    // Load & Save functions
+    //
+    function save() {
+      let text = JSON.stringify(game_progress);
+
+      for (let i = 0; i < text.length; i++)
+        text[i] = (text.charCodeAt(i) << 1).toString();
+
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', "savefile.json");
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
+
+    function load() {
+
+    }
+  </script>
+</body>
+
+</html>
