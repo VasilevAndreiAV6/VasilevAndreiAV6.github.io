@@ -26,11 +26,25 @@
       return await result.text();
     }
 
+    function dec2bin(dec) {
+      return (dec >>> 0).toString(2);
+    }
+
     function printXY(input) {
       let strings = input.split("\r\n");
       let n = parseInt(Number(strings[0].split(' ')[0]));
       let k = parseInt(Number(strings[0].split(' ')[1]));
+      let numbers = [];
 
+      for (let i = 1; i <= n; i++) {
+        numbers[i - 1] = parseInt(strings[i], 2);
+      }
+
+      for (let i = 1; i < n - 1; i += 2) {
+        console.log('numbers[i]: ' + dec2bin(numbers[i]));
+        numbers[i + 1] = (numbers[i - 1] ^ numbers[i]) | (numbers[i + 1] ^ numbers[i]);
+      }
+      /*
       let dict = {};
 
       for (let i = 1; i <= n; i++)
@@ -41,6 +55,7 @@
       for (let i = 1; i <= n; i++)
         if (dict[strings[i]] != 3)
           document.getElementById("abc").innerHTML += strings[i] + ' ';
+          */
     }
 
     async function onLoad() {
