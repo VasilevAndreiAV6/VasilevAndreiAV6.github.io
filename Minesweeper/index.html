@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Minesweeper</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body onload="setDefault()">
+  <input type="text" id="size" placeholder="Field size"> <input type="text" id="numofmines" placeholder="Num of mines">
+  <button onclick="buttonStartClick()">Start</button><br><br>
+  <div id="root">
+    <table id="field"></table>
+  </div>
+  <script>
+
+    function setDefault() {
+      document.getElementById('size').value = '10';
+      document.getElementById('numofmines').value = '10';
+      buttonStartClick();
+    }
+
+    //
+    //  Miesweaper initialization
+    //
+
+    let size, numofmines, field = [];
+
+    function getNeigbours(i) {
+      let res = 0;
+      if (field[i + 1] === 'mine' && (i + 1) % size != 0)
+        res++;
+      if (field[i - 1] === 'mine' && (i - 1) % size != (size - 1))
+        res++;
+      if (field[i + size] === 'mine' && (i + size) < size * size)
+        res++;
+      if (field[i + size - 1] === 'mine' && (i - 1) % size != (size - 1) && (i + size - 1) < size * size)
+        res++;
+      if (field[i + size + 1] === 'mine' && (i + 1) % size != 0 && (i + size + 1) < size * size)
+        res++;
+      if (field[i - size] === 'mine' && (i - size) >= 0)
+        res++;
+      if (field[i - size - 1] === 'mine' && (i - 1) % size != (size - 1) && (i - size) >= 0)
+        res++;
+      if (field[i - size + 1] === 'mine' && (i + 1) % size != 0 && (i - size) >= 0)
+        res++;
+      return res;
+    }
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * max);
+    }
+
+    function createTable() {
+      let myTableDiv = "";
+
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++)
+          myTableDiv += '<td id=cell' + (i * size + j) + ' class="cell" onclick="cellCheck(' + (i * size + j) + ')">   </td>';
+        myTableDiv += "<tr></tr>"
+      }
+      document.getElementById("field").innerHTML = myTableDiv;
+    }
+
+    function setMines() {
+      for (let i = 0; i < numofmines;) {
+        let a = getRandomInt(size * size);
+        if (field[a] != "mine") {
+          field[a] = "mine";
+          i++;
+        }
+      }
+
+      /* DEBUG FIELD DRAW
+      for (let i = 0; i < size * size; i++)
+        if (field[i] == 'mine')
+          document.getElementById(i.toString()).innerHTML = '<div class="mine">M</div>';
+      */
+    }
+
+    function setNeigbourNumbers() {
+      for (let i = 0; i < size * size; i++)
+        if (field[i] != 'mine') {
+          field[i] = getNeigbours(i);
+          /* DEBUG FIELD DRAW
+          if (field[i] != undefined)
+            document.getElementById(i.toString()).innerHTML = '<div class="ngbr' + field[i].toString() + '">' + field[i].toString() + '</div>';
+          */
+        }
+
+    }
+
+    function startMinesweeper() {
+      createTable();
+      setMines();
+      setNeigbourNumbers();
+    }
+
+    function buttonStartClick() {
+      field = [];
+      document.getElementById("field").innerHTML = "";
+      size = parseInt(document.getElementById('size').value);
+      numofmines = parseInt(document.getElementById('numofmines').value);
+      if (size * size > numofmines)
+        startMinesweeper();
+    }
+
+    //
+    // Minesweeper step
+    //
+    /*
+        document.getElementById('field').addEventListener('contextmenu', e => {
+          e.preventDefault();
+        });
+    */
+    /*
+    if (document.getElementById('field').addEventListener) {
+      document.getElementById('field').addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+        cellCheck();
+      }, false);
+    } else {
+      document.getElementById('field').attachEvent('oncontextmenu', function () {
+        alert("You've tried to open context menu");
+        window.event.returnValue = false;
+      });
+    }
+    */
+
+    function cellCheck(i) {
+      document.getElementById('cell' + i).innerHTML = i;
+    }
+  </script>
+</body>
+
+</html>

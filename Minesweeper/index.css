@@ -1,0 +1,41 @@
+table, td, th {
+  border: 1px solid black;
+  text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+  width: 20px;
+  height: 20px;
+}
+
+.ngbr1 {
+  color: blue;
+}
+
+.ngbr2 {
+  color: green;
+}
+
+.ngbr3 {
+  color: orange;
+}
+
+.ngbr4 {
+  color: red;
+}
+
+.ngbr5 {
+  color: brown;
+}
+
+.mine {
+  color: red;
+}
+
+.cell {
+  background-color: rgb(175, 175, 175);
+}
